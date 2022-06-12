@@ -1,29 +1,49 @@
-use libp2p;
+use libp2p::{
+    self,
+    core::upgrade,
+    Transport,
+};
 
-pub mod types {
-    use libp2p;
-
-    pub type AuthNoiseKey = libp2p::noise::AuthenticKeypair<CryptoSpec>;
-    pub type CryptoSpec = libp2p::noise::X25519Spec;
-    pub type NoiseKey = libp2p::noise::Keypair<CryptoSpec>;
-    pub type PeerId = libp2p::PeerId;
-    pub type PeerKey = libp2p::identity::Keypair;
-}
-
+use crate::types::{AuthNoiseKey, BoxedTransport, NoiseKey, PeerId, PeerKey};
 
 #[derive(Clone, Debug)]
 pub struct Peer {
-    pub id: types::PeerId,
-    pub key: types::PeerKey
+    pub id: PeerId,
+    pub key: PeerKey,
 }
 
 impl Peer {
     pub fn new() -> Self {
-        let key = types::PeerKey::generate_ed25519();
+        let key = PeerKey::generate_ed25519();
+        let id = PeerId::from(key.public().clone());
+
         Self {
-            id: types::PeerId::from(key.public().clone()),
-            key: key.clone()
+            id: id.clone(),
+            key: key.clone(),
         }
+    }
+
+    pub fn from(key: PeerKey) -> Self {
+        Self {
+            id: PeerId::from(key.public().clone()),
+            key: key.clone(),
+        }
+    }
+    pub fn authenticate(&self) -> AuthNoiseKey {
+        let dh_keys = NoiseKey::new()
+            .into_authentic(&self.key.clone())
+            .expect("Signing Error: Failed to sign the static DH KeyPair");
+        return dh_keys.clone()
+    }
+
+    pub fn build_transport(&self) -> BoxedTransport {
+        let transport = libp2p::tcp::TokioTcpConfig::new()
+            .nodelay(true)
+            .upgrade(upgrade::Version::V1)
+            .authenticate(libp2p::noise::NoiseConfig::xx(self.authenticate()).into_authenticated())
+            .multiplex(libp2p::mplex::MplexConfig::new())
+            .boxed();
+        return transport
     }
 }
 

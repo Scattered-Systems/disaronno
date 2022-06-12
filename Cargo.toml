@@ -1,6 +1,6 @@
 [workspace]
 members = [
-    "code/apps/disaronno-cli",
+    "code/apps/cli",
     "code/crates/disaronno",
     "code/crates/macros"
 ]
