@@ -1,5 +1,6 @@
 [package]
 authors = ["FL03 <jo3mccain@icloud.com>", "Scattered-Systems <jo3mccain@scattered-systems.com>"]
+categories = ["blockchain", "cryptography", "feature", "macros", "toolkit"]
 description = "Procedural macros for intended for Disaronno, the blockchain toolkit from Scattered-Systems"
 edition = "2021"
 keywords = ["blockchain", "devtool", "scsys"]
@@ -7,7 +8,7 @@ license = "MIT"
 name = "disaronno-macros"
 readme = "README.md"
 repository = "https://github.com/scattered-systems/disaronno.git"
-version = "0.1.0"
+version = "0.1.1"
 
 [lib]
 bench = false
