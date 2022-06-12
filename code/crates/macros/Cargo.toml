@@ -3,9 +3,9 @@ authors = ["FL03 <jo3mccain@icloud.com>", "Scattered-Systems <jo3mccain@scattere
 description = "A highly modular blockchain framework designed for the Scattered-Systems Ecosystem"
 edition = "2021"
 license = "MIT"
-name = "disaronno"
+name = "disaronno-macros"
 repository = "https://github.com/scattered-systems/disaronno.git"
-version = "0.1.4"
+version = "0.1.0"
 
 [lib]
 bench = false
